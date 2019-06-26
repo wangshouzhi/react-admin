@@ -1,22 +1,38 @@
 import React, { Component } from 'react'
 import './navleft.less'
-// import { Menu,Icon,SubMenu } from 'antd'
+import { Menu,Icon, Layout } from 'antd'
 
-// const { SubMenu } = Menu;
+const { SubMenu } = Menu;
+const { Sider} = Layout
+
 
 export default class Navleft extends Component {
     constructor(props) {
         super (props)
         this.state= {
-
+          collapsed: false,
+   
         }
     }
+
+    toggle = () => {
+      this.setState({
+          collapsed: !this.state.collapsed,
+      });
+    };
     render() {
         
         return(
-            <div className='nav_container'>
-            {/*<div className="logo" />
+            
+          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+              <div className="nav_logo" >
+              <Icon
+                  className="nav_trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                  onClick={this.toggle}/>
+                <div className='nav_img'></div>
+              </div>
               <Menu.Item key="1">
                 <Icon type="pie-chart" />
                 <span>Option 1</span>
@@ -54,8 +70,8 @@ export default class Navleft extends Component {
                 <Icon type="file" />
                 <span>File</span>
               </Menu.Item>
-            </Menu>*/}
-            </div>
+            </Menu>
+          </Sider>
         )
     }
 }

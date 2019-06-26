@@ -4,7 +4,7 @@ import './assets/style/common.less'
 import Header from './components/header/header'
 import Footer from './components/footer/footer'
 import Navleft from './components/navleft/navleft'
-const {  Content ,Sider} = Layout;
+const {  Content ,} = Layout;
 export default class Admin extends Component {
     constructor(props) {
         super(props)
@@ -13,18 +13,13 @@ export default class Admin extends Component {
         };
     }
    
-    toggle = () => {
-    this.setState({
-        collapsed: !this.state.collapsed,
-    });
-    };
+   
     render() {
         return(
             <div className='admin_container'>
                 <Layout>
-                    <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-                        <Navleft></Navleft>
-                    </Sider>
+                    
+                    <Navleft></Navleft>
                     <Layout>
                         <Header style={{ background: '#fff', padding: 0 }}>
                             

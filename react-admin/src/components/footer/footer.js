@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import './footer.less'
 
 export default class Footer extends Component {
     constructor(props) {
@@ -9,8 +10,8 @@ export default class Footer extends Component {
     }
     render() {
         return(
-            <div>
-            Footer
+            <div className='footer_container'>
+                Ant Design ©2018 Created by Ant UED
             </div>
         )
     }
