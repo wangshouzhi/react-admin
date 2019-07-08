@@ -1,21 +1,71 @@
 import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 import './navleft.less'
 import { Menu,Icon, Layout } from 'antd'
+import MenuData from '../../mock/menuConfig'
+import { connect } from 'react-redux'
+import { switchMenu } from '../../redux/action'
+ // import Item from 'antd/lib/list/Item';
 
 const { SubMenu } = Menu;
 const { Sider} = Layout
 
 
-export default class Navleft extends Component {
+class Navleft extends Component {
     constructor(props) {
         super (props)
         this.state= {
           collapsed: false,
+          menuTreeNav: '',
+          currentKey: ''
    
         }
     }
-
+    // 周期函数调菜单数据
+    componentWillMount() {
+      let currentKey = window.location.hash.replace(/#|\?.*$/g, '')
+        this.setState({
+          menuTreeNav : this.renderMenu(MenuData),
+          currentKey
+        })
+    }
+    // 菜单渲染
+    renderMenu =(data)=> {
+        return data.map((item)=> {
+          if(item.children){
+            return (
+              <SubMenu title={<span>
+                                <Icon type="user" />
+                                <span>{item.title}</span>
+                              </span>} key={item.key}>
+                { this.renderMenu(item.children) }
+              </SubMenu>
+            )
+          }
+          return  <Menu.Item  key={ item.key }>
+                      <NavLink to={ "/admin" + item.key}>
+                        <Icon type="user"></Icon>
+                         <span>{item.title }</span>
+                      </NavLink>
+                  </Menu.Item>
+        })
+    };
+    /** 
+     * 左侧导航切换事件
+    */
+    menuClick = (item)=>{
+      console.log(item.key)
+      const { dispatch } =this.props
+      dispatch(switchMenu())
+      this.setState({
+        currentKey: item.key
+      })
+    }
+    /** 
+     * 导航显示图标切换
+    */
     toggle = () => {
+      console.log("1")
       this.setState({
           collapsed: !this.state.collapsed,
       });
@@ -25,7 +75,10 @@ export default class Navleft extends Component {
         return(
             
           <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+            <Menu theme="dark" 
+                  defaultSelectedKeys={[this.state.currentKey]} 
+                  mode="inline"
+                  onClick={this.menuClick}>
               <div className="nav_logo" >
               <Icon
                   className="nav_trigger"
@@ -33,45 +86,11 @@ export default class Navleft extends Component {
                   onClick={this.toggle}/>
                 <div className='nav_img'></div>
               </div>
-              <Menu.Item key="1">
-                <Icon type="pie-chart" />
-                <span>Option 1</span>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Icon type="desktop" />
-                <span>Option 2</span>
-              </Menu.Item>
-              <SubMenu
-                key="sub1"
-                title={
-                  <span>
-                    <Icon type="user" />
-                    <span>User</span>
-                  </span>
-                }
-              >
-                <Menu.Item key="3">Tom</Menu.Item>
-                <Menu.Item key="4">Bill</Menu.Item>
-                <Menu.Item key="5">Alex</Menu.Item>
-              </SubMenu>
-              <SubMenu
-                key="sub2"
-                title={
-                  <span>
-                    <Icon type="team" />
-                    <span>Team</span>
-                  </span>
-                }
-              >
-                <Menu.Item key="6">Team 1</Menu.Item>
-                <Menu.Item key="8">Team 2</Menu.Item>
-              </SubMenu>
-              <Menu.Item key="9">
-                <Icon type="file" />
-                <span>File</span>
-              </Menu.Item>
+              { this.state.menuTreeNav}
+            
             </Menu>
           </Sider>
         )
     }
 }
+export default connect()(Navleft)
